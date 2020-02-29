@@ -34,9 +34,9 @@ const sketch = soundFile => p => {
           const sideRand = p.random()
           const heightRand = p.noise(i * noiseScale + 10000)
           if (sideRand < leftChance) {
-            note = [heightRand, false]
+            note = [heightRand, null]
           } else if (sideRand < leftChance + rightChance) {
-            note = [false, heightRand]
+            note = [null, heightRand]
           } else if (sideRand < leftChance + rightChance + bothChance) {
             note = [heightRand, heightRand]
           }
