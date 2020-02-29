@@ -9,6 +9,7 @@ void setupAudio() {
   ac = new AudioContext();
   music = new Music();
   master = new Gain(ac, 1, 1.0);
+  buildGraph();
 }
 
 void buildGraph() {
