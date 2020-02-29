@@ -3,9 +3,9 @@ import $ from 'jquery'
 
 import sketch from './analyze'
 import dropzone from './dropzone'
-import '../public/css/index.css'
+import '../../public/css/index.css'
 // import soundFile from '../public/pacific-707.opus'
-import soundFile from '../public/hydrate.opus'
+import soundFile from '../../public/hydrate.opus'
 
 const rootEl = document.createElement('div')
 rootEl.classList.add('app')
