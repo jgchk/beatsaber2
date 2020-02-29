@@ -21,7 +21,7 @@ class Music {
   SamplePlayer player;
   
   Music() {
-    player = getSamplePlayer("intermission.wav");
+    player = getSamplePlayer("01 IM THE MAN.mp3");
     player.setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS);
     player.pause(true);
   }
