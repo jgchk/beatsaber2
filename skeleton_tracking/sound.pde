@@ -38,6 +38,10 @@ class Music {
   float length() {
     return (float) this.player.getSample().getLength() / 1000;
   }
+  
+  float position() {
+    return (float) this.player.getSample().getPosition() / 1000;
+  }
 }
 
 Sample getSample(String fileName) {
