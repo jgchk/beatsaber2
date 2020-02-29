@@ -25,9 +25,8 @@ const sketch = soundFile => p => {
     const bothChance = 0.1
     const noiseScale = 0.4
     p.noiseDetail(8, 0.5)
-    return Object.assign(
-      {},
-      ...beats.map((timestamp, i) => {
+    return beats
+      .map((timestamp, i) => {
         let note
         const rand = p.noise(i * noiseScale)
         console.log(rand)
@@ -41,11 +40,11 @@ const sketch = soundFile => p => {
           } else if (sideRand < leftChance + rightChance + bothChance) {
             note = [heightRand, heightRand]
           }
-          return { [timestamp]: note }
+          return [timestamp, ...note]
         }
-        return {}
+        return null
       })
-    )
+      .filter(x => !!x)
   }
 
   function createDownloadUrl(data) {
@@ -98,7 +97,7 @@ const sketch = soundFile => p => {
     if (!notes) return
     if (!sound.isPlaying()) sound.play()
     p.background(255)
-    Object.entries(notes).forEach(([timestamp, note]) => {
+    notes.forEach(([timestamp, ...note]) => {
       const x = p.map(timestamp, 0, sound.duration(), 0, p.width)
       const y = p.map(
         note.find(n => !!n),
