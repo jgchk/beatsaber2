@@ -34,6 +34,10 @@ class Music {
   void pause() {
     this.player.pause(true);
   }
+  
+  float length() {
+    return (float) this.player.getSample().getLength() / 1000;
+  }
 }
 
 Sample getSample(String fileName) {
