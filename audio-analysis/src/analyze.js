@@ -22,7 +22,7 @@ const sketch = soundFile => p => {
     const leftChance = 0.45
     const rightChance = 0.45
     const bothChance = 0.1
-    const noiseScale = 0.2
+    const noiseScale = 0.4
     p.noiseDetail(8, 0.5)
     return Object.assign(
       {},
