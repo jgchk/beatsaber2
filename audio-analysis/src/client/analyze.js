@@ -112,28 +112,23 @@ const sketch = soundFile => p => {
     p.createCanvas(p.windowWidth, 100)
   }
 
+  function drawNote(timestamp, pos, side) {
+    if (!pos) return
+    const color = side === 'left' ? p.color(0, 0, 255) : p.color(255, 0, 0)
+    const x = p.map(timestamp, 0, sound.duration(), 0, p.width)
+    const y = p.map(pos.y, 0, 1, 0, p.height)
+    const size = p.map(pos.x, 0, 1, 5, 15)
+    p.fill(color)
+    p.square(x, y, size)
+  }
+
   p.draw = () => {
     if (!notes) return
     if (!sound.isPlaying()) sound.play()
     p.background(255)
-    notes.forEach(([timestamp, ...note]) => {
-      const x = p.map(timestamp, 0, sound.duration(), 0, p.width)
-      const y = p.map(
-        note.find(n => !!n),
-        0,
-        1,
-        0,
-        p.height
-      )
-      const color =
-        // eslint-disable-next-line no-nested-ternary
-        note[0] && note[1]
-          ? p.color(255, 0, 255)
-          : note[0]
-          ? p.color(0, 0, 255)
-          : p.color(255, 0, 0)
-      p.fill(color)
-      p.square(x, y, 10)
+    notes.forEach(({ timestamp, left, right }) => {
+      drawNote(timestamp, left, 'left')
+      drawNote(timestamp, right, 'right')
     })
 
     const pos = p.map(sound.currentTime(), 0, sound.duration(), 0, p.width)
