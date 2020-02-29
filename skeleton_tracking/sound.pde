@@ -9,7 +9,7 @@ Gain master;
 
 void setupAudio() {
   ac = new AudioContext();
-  music = new Music("melody-1min.mp3");
+  music = new Music("melody-130.mp3");
   explosion = new Effect("explosion.wav");
   miss = new Effect("miss.mp3");
   master = new Gain(ac, 3, 1.0);
