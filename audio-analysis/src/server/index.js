@@ -8,6 +8,7 @@ const port = 3000
 
 app.use(express.static('public'))
 app.use(express.static('dist'))
+app.use('/uploads', express.static('uploads'))
 app.use(fileUpload())
 
 app.post('/upload', (req, res) => {
@@ -21,9 +22,10 @@ app.post('/upload', (req, res) => {
   // Use the mv() method to place the file somewhere on your server
   console.log(file)
   const [, ext] = file.name.split('.')
-  return file.mv(`./uploads/${nanoid()}.${ext}`, err => {
+  const filename = `/uploads/${nanoid()}.${ext}`
+  return file.mv(`.${filename}`, err => {
     if (err) return res.status(500).send({ success: false })
-    return res.send({ success: true })
+    return res.send({ success: true, file: filename })
   })
 })
 
