@@ -1,20 +1,39 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 import 'p5/lib/addons/p5.sound'
-import soundFile from '../public/pacific-707.opus'
 
-let sound
+function getPeaks(sound, length) {
+  console.log('getPeaks')
+  return Array.from(sound.getPeaks(length))
+}
 
-const sketch = p => {
+function getBeats(sound) {
+  return new Promise(resolve => {
+    const callback = beats => {
+      console.log('callback')
+      resolve(beats)
+    }
+    sound.processPeaks(callback)
+    console.log('getBeats')
+  })
+}
+
+const sketch = soundFile => p => {
+  let sound
+
   p.preload = () => {
     console.log('preload')
     sound = p.loadSound(soundFile)
   }
 
-  p.setup = () => {
+  p.setup = async () => {
     console.log('setup')
-    sound.setVolume(1)
-    sound.play()
+    p.createCanvas(p.windowWidth, p.windowHeight - 10)
+
+    const peaks = getPeaks(sound, p.windowWidth)
+    console.log(peaks)
+    const beats = await getBeats(sound)
+    console.log(beats)
   }
 }
 
