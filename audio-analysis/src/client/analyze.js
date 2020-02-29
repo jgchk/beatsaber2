@@ -14,12 +14,14 @@ const sketch = soundFile => p => {
       const callback = beats => {
         resolve(beats.sort((a, b) => a - b))
       }
-      sound.processPeaks(callback)
+      const minPeaks = parseInt(sound.duration() / 4, 10)
+      console.log('minPeaks', minPeaks)
+      sound.processPeaks(callback, 0.9, 0.22, minPeaks)
     })
   }
 
   function createNoteMap(beats) {
-    const noteChance = 0.5
+    const noteChance = 1
     const leftChance = 0.45
     const rightChance = 0.45
     const bothChance = 0.1
@@ -29,7 +31,6 @@ const sketch = soundFile => p => {
       .map((timestamp, i) => {
         let note
         const rand = p.noise(i * noiseScale)
-        console.log(rand)
         if (rand < noteChance) {
           const sideRand = p.random()
           const heightRand = p.noise(i * noiseScale + 10000)
@@ -88,7 +89,9 @@ const sketch = soundFile => p => {
 
   p.setup = async () => {
     const beats = await getBeats()
+    console.log('beats', beats)
     notes = createNoteMap(beats)
+    console.log('notes', notes)
     createDownloadLink(notes)
     p.createCanvas(p.windowWidth, 100)
   }
