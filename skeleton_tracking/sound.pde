@@ -3,28 +3,67 @@ import org.jaudiolibs.beads.*;
 
 AudioContext ac;
 Music music;
+Effect explosion;
+Effect miss;
 Gain master;
 
 void setupAudio() {
   ac = new AudioContext();
-  music = new Music();
-  master = new Gain(ac, 1, 1.0);
+  music = new Music("melody-1min.mp3");
+  explosion = new Effect("explosion.wav");
+  miss = new Effect("miss.mp3");
+  master = new Gain(ac, 3, 1.0);
   buildGraph();
 }
 
 void buildGraph() {
-  master.addInput(music.player);
+  master.addInput(music.gain);
+  master.addInput(explosion.gain);
+  master.addInput(miss.gain);
   ac.out.addInput(master);
   ac.start();
 }
 
+
+class Effect {
+  SamplePlayer player;
+  Gain gain;
+  
+  Effect(String file) {
+    player = getSamplePlayer(file);
+    player.pause(true);
+    player.setEndListener(
+      new Bead() {
+        public void messageReceived(Bead msg) {
+          player.pause(true);
+        }
+      });
+      
+    gain = new Gain(ac, 1, 1.0);
+    gain.addInput(player);
+  }
+  
+  void play() {
+    this.player.start(0);
+  }
+  
+  void pause() {
+    this.player.pause(true);
+  }
+}
+  
+
 class Music {
   SamplePlayer player;
+  Gain gain;
   
-  Music() {
-    player = getSamplePlayer("01 IM THE MAN.mp3");
+  Music(String file) {
+    player = getSamplePlayer(file);
     player.setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS);
     player.pause(true);
+    
+    gain = new Gain(ac, 1, 1.0);
+    gain.addInput(player);
   }
   
   void play() {
@@ -40,7 +79,7 @@ class Music {
   }
   
   float position() {
-    return (float) this.player.getSample().getPosition() / 1000;
+    return (float) this.player.getPosition() / 1000;
   }
 }
 
