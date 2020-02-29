@@ -47,18 +47,21 @@ const sketch = soundFile => p => {
 
   function createDownloadUrl(data) {
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-    if (dl !== null) window.URL.revokeObjectURL(dl)
+    if (dl) window.URL.revokeObjectURL(dl)
     dl = window.URL.createObjectURL(blob)
     return dl
   }
 
   function createDownloadLink(data) {
-    const link = document.createElement('a')
-    link.textContent = 'Download'
-    link.setAttribute('download', 'notes.json')
-    link.href = createDownloadUrl(data)
-    document.body.appendChild(link)
-    return link
+    let dlLink = document.querySelector('.dl')
+    if (dlLink) dlLink.parentNode.removeChild(dlLink)
+    dlLink = document.createElement('a')
+    dlLink.textContent = 'Download'
+    dlLink.setAttribute('download', 'notes.json')
+    dlLink.classList.add('dl')
+    dlLink.href = createDownloadUrl(data)
+    document.body.appendChild(dlLink)
+    return dlLink
   }
 
   p.preload = () => {
