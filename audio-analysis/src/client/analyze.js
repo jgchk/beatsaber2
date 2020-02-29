@@ -1,6 +1,7 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
+import $ from 'jquery'
 import 'p5/lib/addons/p5.sound'
 
 const sketch = soundFile => p => {
@@ -62,7 +63,7 @@ const sketch = soundFile => p => {
     dlLink.setAttribute('download', 'notes.json')
     dlLink.classList.add('dl')
     dlLink.href = createDownloadUrl(data)
-    document.body.appendChild(dlLink)
+    $(document.body).prepend(dlLink)
     return dlLink
   }
 
