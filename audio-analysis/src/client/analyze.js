@@ -20,31 +20,44 @@ const sketch = soundFile => p => {
     })
   }
 
-  function createNoteMap(beats) {
-    const beginningPadding = 5
-    const noteChance = 1
+  const noiseOffset = 10000
+
+  function randomPos(i) {
+    const noiseScale = 0.4
+    const x = p.noise(i * noiseScale)
+    const y = p.noise(i * noiseScale + noiseOffset)
+    return { x, y }
+  }
+
+  function createNote(timestamp, i) {
     const leftChance = 0.45
     const rightChance = 0.45
     const bothChance = 0.1
+
+    const note = { timestamp, left: null, right: null }
+
+    const sideRand = p.random()
+    if (sideRand < leftChance) {
+      note.left = randomPos(i)
+    } else if (sideRand < leftChance + rightChance) {
+      note.right = randomPos(i)
+    } else if (sideRand < leftChance + rightChance + bothChance) {
+      note.left = randomPos(i)
+      note.right = randomPos(i + 10 * noiseOffset)
+    }
+
+    return note
+  }
+
+  function createNoteMap(beats) {
+    const beginningPadding = 5
+    const noteChance = 1
     const noiseScale = 0.4
-    p.noiseDetail(8, 0.5)
     return beats
       .filter(timestamp => timestamp > beginningPadding)
       .map((timestamp, i) => {
-        let note
         const rand = p.noise(i * noiseScale)
-        if (rand < noteChance) {
-          const sideRand = p.random()
-          const heightRand = p.noise(i * noiseScale + 10000)
-          if (sideRand < leftChance) {
-            note = [heightRand, null]
-          } else if (sideRand < leftChance + rightChance) {
-            note = [null, heightRand]
-          } else if (sideRand < leftChance + rightChance + bothChance) {
-            note = [heightRand, heightRand]
-          }
-          return [timestamp, ...note]
-        }
+        if (rand < noteChance) return createNote(timestamp, i)
         return null
       })
       .filter(x => !!x)
@@ -86,6 +99,7 @@ const sketch = soundFile => p => {
     const seed = createSeed(soundFile)
     p.noiseSeed(seed)
     p.randomSeed(seed)
+    p.noiseDetail(8, 0.5)
     sound = p.loadSound(soundFile)
   }
 
