@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import express from 'express'
 import fileUpload from 'express-fileupload'
-import nanoid from 'nanoid'
+import fs from 'fs'
 
 const app = express()
 const port = 3000
@@ -21,11 +21,19 @@ app.post('/upload', (req, res) => {
 
   // Use the mv() method to place the file somewhere on your server
   console.log(file)
-  const [, ext] = file.name.split('.')
-  const filename = `/uploads/${nanoid()}.${ext}`
-  return file.mv(`.${filename}`, err => {
+  const uploadsLocation = `./uploads/${file.name}`
+  const gameDataLocation = `../beatsaber2/data/music/${file.name}`
+  return file.mv(uploadsLocation, err => {
     if (err) return res.status(500).send({ success: false })
-    return res.send({ success: true, file: filename })
+    fs.copyFile(uploadsLocation, gameDataLocation, error => {
+      if (error) throw error
+      console.log(`${uploadsLocation} was copied to ${gameDataLocation}`)
+    })
+    return res.send({
+      success: true,
+      filename: file.name,
+      location: `/uploads/${file.name}`,
+    })
   })
 })
 

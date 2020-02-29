@@ -10,12 +10,10 @@ rootEl.classList.add('app')
 document.body.append(rootEl)
 
 let p5
-let file
 function onUpload(response) {
   if (!response.success) return
   if (p5) p5.remove()
-  file = response.file
-  p5 = new P5(sketch(file), rootEl)
+  p5 = new P5(sketch(response.location, response.filename), rootEl)
 }
 
 let $dz

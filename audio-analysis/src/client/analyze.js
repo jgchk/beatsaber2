@@ -4,7 +4,8 @@
 import $ from 'jquery'
 import 'p5/lib/addons/p5.sound'
 
-const sketch = soundFile => p => {
+const sketch = (fileLocation, fileName) => p => {
+  const title = fileName.split('.')[0]
   let sound
   let dl
   let notes
@@ -75,7 +76,7 @@ const sketch = soundFile => p => {
     if (dlLink) dlLink.parentNode.removeChild(dlLink)
     dlLink = document.createElement('a')
     dlLink.textContent = 'Download'
-    dlLink.setAttribute('download', 'notes.json')
+    dlLink.setAttribute('download', `${title}.json`)
     dlLink.classList.add('dl')
     dlLink.href = createDownloadUrl(data)
     $(document.body).prepend(dlLink)
@@ -96,11 +97,11 @@ const sketch = soundFile => p => {
   }
 
   p.preload = () => {
-    const seed = createSeed(soundFile)
+    const seed = createSeed(fileLocation)
     p.noiseSeed(seed)
     p.randomSeed(seed)
     p.noiseDetail(8, 0.5)
-    sound = p.loadSound(soundFile)
+    sound = p.loadSound(fileLocation)
   }
 
   p.setup = async () => {
