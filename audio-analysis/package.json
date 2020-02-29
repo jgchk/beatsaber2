@@ -10,6 +10,8 @@
     "test": "yarn run lint"
   },
   "dependencies": {
+    "dropzone": "^5.7.0",
+    "jquery": "^3.4.1",
     "p5": "^0.10.2"
   },
   "devDependencies": {
