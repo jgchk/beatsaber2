@@ -1,14 +1,34 @@
 {
   "name": "audio-analysis",
   "main": "index.js",
+  "license": "GPL-3.0-or-later",
   "scripts": {
-    "build": "webpack"
+    "dev": "env NODE_ENV=development webpack-dev-server",
+    "build": "env NODE_ENV=production webpack",
+    "lint": "eslint",
+    "fix": "eslint --cache --fix --ext .js ./",
+    "test": "yarn run lint"
   },
   "dependencies": {
     "p5": "^0.10.2"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": ">=4",
+    "lint-staged": ">=10",
+    "prettier": "^1.19.1",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   }
 }
