@@ -6,15 +6,20 @@
     "dev": "env NODE_ENV=development webpack-dev-server",
     "build": "env NODE_ENV=production webpack",
     "lint": "eslint",
-    "fix": "eslint --cache --fix --ext .js ./",
+    "fix": "eslint --cache --fix --ext .js ./src",
     "test": "yarn run lint"
   },
   "dependencies": {
     "p5": "^0.10.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/preset-env": "^7.8.6",
+    "babel-loader": "^8.0.6",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": ">=4",
     "lint-staged": ">=10",

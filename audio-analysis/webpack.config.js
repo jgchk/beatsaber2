@@ -11,4 +11,7 @@ module.exports = {
     port: 8000,
     hot: true,
   },
+  module: {
+    rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }],
+  },
 }
