@@ -2,38 +2,56 @@
 /* eslint-disable no-param-reassign */
 import 'p5/lib/addons/p5.sound'
 
-function getPeaks(sound, length) {
-  console.log('getPeaks')
-  return Array.from(sound.getPeaks(length))
-}
-
-function getBeats(sound) {
-  return new Promise(resolve => {
-    const callback = beats => {
-      console.log('callback')
-      resolve(beats)
-    }
-    sound.processPeaks(callback)
-    console.log('getBeats')
-  })
-}
-
 const sketch = soundFile => p => {
   let sound
 
+  function getBeats() {
+    return new Promise(resolve => {
+      const callback = beats => {
+        resolve(beats.sort((a, b) => a - b))
+      }
+      sound.processPeaks(callback)
+    })
+  }
+
+  function createNoteMap(beats) {
+    const noteChance = 0.5
+    const leftChance = 0.45
+    const rightChance = 0.45
+    const bothChance = 0.1
+    return Object.assign(
+      {},
+      ...beats.map((timestamp, i) => {
+        let note
+        const rand = p.noise(i)
+        if (rand < noteChance) {
+          if (rand < leftChance * noteChance) {
+            note = [true, false]
+          } else if (rand < (leftChance + rightChance) * noteChance) {
+            note = [false, true]
+          } else if (
+            rand <
+            (leftChance + rightChance + bothChance) * noteChance
+          ) {
+            note = [true, true]
+          }
+          return { [timestamp]: note }
+        }
+        return {}
+      })
+    )
+  }
+
   p.preload = () => {
-    console.log('preload')
     sound = p.loadSound(soundFile)
   }
 
   p.setup = async () => {
-    console.log('setup')
     p.createCanvas(p.windowWidth, p.windowHeight - 10)
 
-    const peaks = getPeaks(sound, p.windowWidth)
-    console.log(peaks)
-    const beats = await getBeats(sound)
-    console.log(beats)
+    const beats = await getBeats()
+    const notes = createNoteMap(beats)
+    console.log(notes)
   }
 }
 
